@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:15
+    container_name: myproject_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: myproject
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  django:
+    build:
+      context: ./django_app
+      dockerfile: Dockerfile-django
+    container_name: myproject_django
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django_app:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - DB_HOST=db
+      - DB_NAME=myproject
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+
+  fastapi:
+    build:
+     context: ./fastapi_app
+     dockerfile: Dockerfile-fastapi
+    container_name: myproject_fastapi
+    command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
+    volumes:
+      - ./fastapi_app:/code
+    ports:
+      - "9000:9000"
+    depends_on:
+      - db
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: myproject_rabbitmq
+    ports:
+      - "5672:5672"    # port do komunikacji
+      - "15672:15672"  # panel admina w przeglądarce
+  
+  adminer:
+   image: adminer
+   container_name: adminer
+   restart: always
+   ports:
+    - "8081:8080"
+   depends_on:
+    - db
+
+volumes:
+  postgres_data:

@@ -1,0 +1,4 @@
+fastapi
+uvicorn[standard]
+django>=4.2
+psycopg2-binary

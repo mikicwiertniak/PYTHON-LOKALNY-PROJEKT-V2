@@ -1,0 +1,34 @@
+http://127.0.0.1:8000/
+===KOMENDY
+
+ Wirtualne środowisko:
+
+ /testowy_projekt_python/    
+Scripts/activate
+deactivate
+
+
+START APLIKACJI:
+python manage.py runserver
+
+
+
+MIGRACJE
+ py manage.py migrate
+
+ py manage.py makemigrations polls  === na podstawie models.py w folderze polls 
+
+
+DOCKER 
+
+// STATUS
+docker-compose ps
+
+// ZATRZYMANIE 
+docker-compose down
+
+// RESTART
+docker-compose restart
+
+// START
+docker-compose up -d

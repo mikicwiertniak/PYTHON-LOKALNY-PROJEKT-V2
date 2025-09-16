@@ -1,0 +1,19 @@
+# Użyj obrazu z Pythonem
+FROM python:3.11-slim
+
+# Zależności systemowe
+RUN apt-get update \
+    && apt-get install -y build-essential libpq-dev gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Ustaw katalog roboczy
+WORKDIR /code
+
+# Skopiuj wymagania
+COPY requirements.txt /code/
+
+# Instalacja paczek
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Skopiuj resztę projektu
+COPY . /code/
